@@ -80,9 +80,10 @@ now=`date +'%s'`
 nowPlus=$((now + secondsToBan))
 
 activityCounter=0
-function logLine {
-  [ $((activityCounter++)) -eq 0 ] && echo 'Running dropBrute on `date` \($now\)'
-  echo "$1"
+logLine()
+{
+  [ $((activityCounter++)) -eq 0 ] && echo Running dropBrute on `date` \($now\)
+  [ "$1" == "" ] || echo "$1"
 }
 
 # find new badIPs
@@ -116,4 +117,4 @@ while read lease ; do
   fi
 done < $leaseFile
 
-[ $alwaysPrintStatus ] && logLine
+[ $alwaysPrintStatus -gt 0 ] && logLine
