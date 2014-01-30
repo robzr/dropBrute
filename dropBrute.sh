@@ -43,8 +43,9 @@ allowedAttempts=10
 # default is 7 days
 secondsToBan=$((7*60*60*24))
 
-# the "lease" file - defaults to /tmp which does not persist across reboots
-leaseFile=/tmp/dropBrute.leases
+# the "lease" file 
+leaseFile=/tmp/dropBrute.leases    # does not persist across reboots
+#leaseFile=/etc/dropBrute.leases   # persists across reboots
 
 # This is the iptables chain that drop commands will go into.
 # you will need to put a reference in your firewall rules for this
@@ -59,8 +60,9 @@ iptWhiteRule='-j RETURN'
 # You can put default leasefile entries in the following space.
 # Syntax is simply "leasetime _space_ IP_or_network".  A leasetime of -1 is a 
 # whitelist entry, and a leastime of 0 is a permanent blacklist entry.
+MYNET=$(/bin/ipcalc.sh `uci get network.lan.ipaddr` `uci get network.lan.netmask` | awk -F= '/^NETWORK=/ {printf $2."/"} /^PREFIX=/ {print $2}')
 [ -f $leaseFile ] || cat <<__EOF__>>$leaseFile
--1 192.168.1.0/24
+-1 $MYNET
 __EOF__
 
 # End of user customizable variables (unless you know better :) )
