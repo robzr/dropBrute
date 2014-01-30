@@ -12,6 +12,7 @@ Initial version posted 10/31/2011 at https://forum.openwrt.org/viewtopic.php?pid
 
 Installation Instructions
 -------------------------
-curl -ko /usr/sbin/dropBrute.sh https://raw.github.com/robzr/dropBrute/master/dropBrute.sh
-chmod 755 /usr/sbin/dropBrute.sh
+DB=/usr/sbin/dropBrute.sh
+curl -ko $DB https://raw.github.com/robzr/dropBrute/master/dropBrute.sh
+chmod 755 $DB
 

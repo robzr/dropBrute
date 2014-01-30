@@ -44,8 +44,8 @@ allowedAttempts=10
 secondsToBan=$((7*60*60*24))
 
 # the "lease" file 
-leaseFile=/tmp/dropBrute.leases    # does not persist across reboots
-#leaseFile=/etc/dropBrute.leases   # persists across reboots
+#leaseFile=/tmp/dropBrute.leases    # does not persist across reboots
+leaseFile=/etc/dropBrute.leases   # persists across reboots
 
 # This is the iptables chain that drop commands will go into.
 # you will need to put a reference in your firewall rules for this
