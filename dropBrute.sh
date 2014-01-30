@@ -35,6 +35,9 @@
 #
 #    echo 0 1.2.3.0/24 >> /tmp/dropBrute.leases
 
+# Determines whether the status output is printed when nothing happens
+alwaysPrintStatus=0
+
 # How many bad attempts before banning. Only the log entries from the 
 # current day are checked.
 allowedAttempts=10
@@ -76,7 +79,11 @@ today=`date +'%b %d'`
 now=`date +'%s'`
 nowPlus=$((now + secondsToBan))
 
-echo Running dropBrute on `date` \($now\)
+activityCounter=0
+function logLine {
+  [ $((activityCounter++)) -eq 0 ] && echo 'Running dropBrute on `date` \($now\)'
+  echo "$1"
+}
 
 # find new badIPs
 for badIP in `logread|egrep "^$today"|fgrep dropbear|egrep 'login attempt for nonexistent user'\|'bad password attempt for'|sed 's/^.*from //'|sed 's/:.*$//'|sort -u` ; do
@@ -96,15 +103,17 @@ while read lease ; do
   leaseIP=`echo $lease|cut -f2 -d\ `
   if [ $leaseTime -lt 0 ] ; then
     if [ `$ipt -S $leaseChain|egrep \ $leaseIP/32\ \|\ $leaseIP\ |fgrep -- "$iptWhiteRule"| wc -l` -lt 1 ] ; then
-      echo Adding new whitelist rule for $leaseIP
+      logLine "Adding new whitelist rule for $leaseIP"
       $ipt -I $iptChain -s $leaseIP $iptWhiteRule
     fi
   elif [ $leaseTime -ge 1 -a $now -gt $leaseTime ] ; then
-    echo Expiring lease for $leaseIP
+    logLine "Expiring lease for $leaseIP"
     $ipt -D $iptChain -s $leaseIP $iptDropRule
     sed -i /$leaseIP/d $leaseFile
   elif [ $leaseTime -ge 0 -a `$ipt -S $leaseChain|egrep \ $leaseIP/32\ \|\ $leaseIP\ |wc -l` -lt 1 ] ; then
-    echo Adding new rule for $leaseIP
+    logLine Adding new rule for $leaseIP
     $ipt -A $iptChain -s $leaseIP $iptDropRule
   fi
 done < $leaseFile
+
+[ $alwaysPrintStatus ] && logLine
