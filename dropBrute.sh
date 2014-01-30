@@ -13,8 +13,8 @@
 #    accept ssh, something like:
 #
 #    iptables -N dropBrute
-#    iptables -I input_rule -i br-wan -p tcp --dport 22 -j dropBrute
-#    iptables -I input_rule -i br-wan -p tcp --dport 22 -m state --state NEW -m limit --limit 6/min --limit-burst 6 -j ACCEPT
+#    iptables -I input_rule -i `uci get network.wan.ifname` -p tcp --dport 22 -j dropBrute
+#    iptables -I input_rule -i `uci get network.wan.ifname` -p tcp --dport 22 -m state --state NEW -m limit --limit 6/min --limit-burst 6 -j ACCEPT
 #
 # 3) Run the script periodically out of cron:
 #
