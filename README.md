@@ -1,8 +1,6 @@
 ## dropBrute
-- Rob Zwissler @robzr
 
-This project has been superceeded by bearDropper -> https://github.com/robzr/bearDropper
-
+**dropBrute has been superceeded by [bearDropper](https://github.com/robzr/bearDropper)**
 
 **Lightweight fail2ban alternative for OpenWRT**
 
